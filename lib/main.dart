@@ -1,24 +1,19 @@
 import 'package:chess_over/config/theme.dart';
+import 'package:chess_over/routes/home/main.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const App());
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
-
+  App({Key? key}) : super(key: key);
+  final MyTheme myTheme = MyTheme();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: MyTheme,
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text("Chess Over"),
-        ),
-      ),
-    );
+        theme: myTheme.theme,
+        debugShowCheckedModeBanner: false,
+        home: const Home());
   }
 }
