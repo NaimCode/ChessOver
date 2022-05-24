@@ -1,5 +1,5 @@
 import 'package:chess_over/config/theme.dart';
-import 'package:chess_over/routes/home/main.dart';
+import 'package:chess_over/routes/board/index.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,6 +14,6 @@ class App extends StatelessWidget {
     return MaterialApp(
         theme: myTheme.theme,
         debugShowCheckedModeBanner: false,
-        home: const Home());
+        home: const BoardPage());
   }
 }
