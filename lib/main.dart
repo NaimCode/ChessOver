@@ -14,6 +14,6 @@ class App extends StatelessWidget {
     return MaterialApp(
         theme: myTheme.theme,
         debugShowCheckedModeBanner: false,
-        home: const BoardPage());
+        home: BoardPage());
   }
 }

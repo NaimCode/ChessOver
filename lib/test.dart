@@ -1,19 +1,27 @@
-enum Test {
-  //Black v2
-  pawnBlack2("assets/pieces/v2/black/pawn.png"),
-  bishopBlack2("assets/pieces/v2/black/bishop.png"),
-  knightBlack2("assets/pieces/v2/black/knight.png"),
-  kingBlack2("assets/pieces/v2/black/king.png"),
-  queenBlack2("assets/pieces/v2/black/queen.png"),
-  rookBlack2("assets/pieces/v2/black/rook.png"),
-//White v2
-  pawnWhite2("assets/pieces/v2/white/pawn.png"),
-  bishopWhite2("assets/pieces/v2/white/bishop.png"),
-  knightWhite2("assets/pieces/v2/white/knight.png"),
-  kingWhite2("assets/pieces/v2/white/king.png"),
-  queenWhite2("assets/pieces/v2/white/queen.png"),
-  rookWhite2("assets/pieces/v2/white/rook.png");
+import 'package:flutter/material.dart';
 
-  const Test(this.url);
-  final String url;
+class Test extends StatefulWidget {
+  const Test({Key? key}) : super(key: key);
+
+  @override
+  State<Test> createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  @override
+  void initState() {
+    final List<int> y = [1, 2, 3, 4, 5, 6, 7, 8];
+    // for (int i in y) {
+    //   print();
+    // }
+    print("hello");
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+    );
+  }
 }

@@ -2,9 +2,9 @@ import 'package:chess_over/data/assets.dart';
 import 'package:chess_over/models/enum.dart';
 
 abstract class Piece {
-  String img;
+  late String img;
   PieceType type;
-  Piece({required this.img, required this.type});
+  Piece({required this.type});
 
   @override
   String toString() => 'Piece(img: $img)';
@@ -24,6 +24,5 @@ class Pawn extends Piece {
   Pawn({required super.type}) {
     img =
         type.value ? AssetsPieces.pawnWhite1.url : AssetsPieces.pawnBlack1.url;
-    super(type: type);
   }
 }
