@@ -36,7 +36,7 @@ class PieceWidget extends StatelessWidget {
         child: LayoutBuilder(
             builder: ((context, constraints) => GestureDetector(
                   onTap: () {
-                    board.changeActive(square.id);
+                    board.movableSquare(square.id);
                   },
                   child: Container(
                     padding: const EdgeInsets.all(3),

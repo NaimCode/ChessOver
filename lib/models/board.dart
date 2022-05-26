@@ -41,21 +41,19 @@ class Board extends ChangeNotifier {
     notifyListeners();
   }
 
-  void moveToOne() {}
-  //?Private methods
-  void _init() {
-    for (int col in _y) {
-      final List<Square> temp = [];
-      for (String raw in _x) {
-        final Square square = Square(
-            color: _setSquareColor(col: col, raw: raw, raws: _x),
-            id: col.toString() + raw,
-            activeColor: _activeColor);
-        temp.add(square);
-      }
-      _board.add(temp);
-    }
+  void movableSquare(String id) {
+    changeActive(id);
+    _searchMovableSquare(
+        id: id,
+        eq: (square, i, y) {
+          if (square.pieace != null) {
+            square.pieace!.movableSquare(col: i, raw: y, board: board);
+          }
+        });
+    notifyListeners();
   }
+
+  //?Private methods
 
   void _search(
       {required String id,
@@ -69,6 +67,31 @@ class Board extends ChangeNotifier {
           neq(_board[i][y]);
         }
       }
+    }
+  }
+
+  void _searchMovableSquare(
+      {required String id, required void Function(Square, int, int) eq}) {
+    for (int i = 0; i < _board.length; i++) {
+      for (int y = 0; y < _board[i].length; y++) {
+        if (_board[i][y].id == id) {
+          eq(_board[i][y], i, y);
+        }
+      }
+    }
+  }
+
+  void _init() {
+    for (int col in _y) {
+      final List<Square> temp = [];
+      for (String raw in _x) {
+        final Square square = Square(
+            color: _setSquareColor(col: col, raw: raw, raws: _x),
+            id: col.toString() + raw,
+            activeColor: _activeColor);
+        temp.add(square);
+      }
+      _board.add(temp);
     }
   }
 
