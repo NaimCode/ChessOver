@@ -31,16 +31,22 @@ class PieceWidget extends StatelessWidget {
   final Square square;
   @override
   Widget build(BuildContext context) {
+    final Board board = context.read<Board>();
     return Expanded(
         child: LayoutBuilder(
-            builder: ((context, constraints) => Container(
-                  padding: const EdgeInsets.all(3),
-                  height: constraints.maxWidth,
-                  color: square.color,
-                  child: Center(
-                    child: square.pieace == null
-                        ? null
-                        : Image.asset(square.pieace!.img),
+            builder: ((context, constraints) => GestureDetector(
+                  onTap: () {
+                    board.changeActive(square.id);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(3),
+                    height: constraints.maxWidth,
+                    color: square.getColor,
+                    child: Center(
+                      child: square.pieace == null
+                          ? null
+                          : Image.asset(square.pieace!.img),
+                    ),
                   ),
                 ))));
   }

@@ -10,6 +10,7 @@ class Board extends ChangeNotifier {
   final List<int> _y = [8, 7, 6, 5, 4, 3, 2, 1];
   final Color _color1 = const Color(0xffB7C0D8);
   final Color _color2 = const Color(0xffE8EDF9);
+  final Color _activeColor = const Color(0xffA796FF);
   final List<String> _x = ["A", "B", "C", "D", "E", "F", "G", "H"];
   final List<List<Square>> _board = [];
   UnmodifiableListView<List<Square>> get board => UnmodifiableListView(_board);
@@ -25,17 +26,49 @@ class Board extends ChangeNotifier {
     // _board[7][0].pieace = Rook(type: PieceType.white);
   }
 
-  //?Private functions
+  //?Public methods
+  void changeActive(String id) {
+    _search(
+        id: id,
+        eq: (square) {
+          if (square.pieace != null) {
+            square.changeActive();
+          }
+        },
+        neq: (square) {
+          square.active = false;
+        });
+    notifyListeners();
+  }
+
+  void moveToOne() {}
+  //?Private methods
   void _init() {
     for (int col in _y) {
       final List<Square> temp = [];
       for (String raw in _x) {
         final Square square = Square(
             color: _setSquareColor(col: col, raw: raw, raws: _x),
-            id: col.toString() + raw);
+            id: col.toString() + raw,
+            activeColor: _activeColor);
         temp.add(square);
       }
       _board.add(temp);
+    }
+  }
+
+  void _search(
+      {required String id,
+      required void Function(Square) eq,
+      required void Function(Square) neq}) {
+    for (int i = 0; i < _board.length; i++) {
+      for (int y = 0; y < _board[i].length; y++) {
+        if (_board[i][y].id == id) {
+          eq(_board[i][y]);
+        } else {
+          neq(_board[i][y]);
+        }
+      }
     }
   }
 
@@ -88,23 +121,32 @@ class Board extends ChangeNotifier {
 
 class Square {
   Color color;
+  bool active = false;
+  Color activeColor;
   Piece? pieace;
   String id;
+
   Square({
     required this.color,
     this.pieace,
+    required this.activeColor,
     required this.id,
   });
 
-  Square copyWith({
-    Color? color,
-    Piece? pieace,
-    String? id,
-  }) {
+  Square copyWith(
+      {Color? color, Piece? pieace, String? id, Color? activeColor}) {
     return Square(
+      activeColor: activeColor ?? this.activeColor,
       color: color ?? this.color,
       pieace: pieace ?? this.pieace,
       id: id ?? this.id,
     );
+  }
+
+  //?Getters
+  Color get getColor => active ? activeColor : color;
+  //?Methods
+  void changeActive() {
+    active = !active;
   }
 }

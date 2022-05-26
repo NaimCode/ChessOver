@@ -11,14 +11,14 @@ class BoardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<Board>(
         create: (_) => board,
-        child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              board.addPiece();
-            },
-            child: const Icon(Icons.add),
-          ),
-          body: const Center(child: BoardWidget()),
+        child: const Scaffold(
+          // floatingActionButton: FloatingActionButton(
+          //   // onPressed: () {
+          //   //   board.addPiece();
+          //   // },
+          //   child: const Icon(Icons.add),
+          // ),
+          body: Center(child: BoardWidget()),
         ));
   }
 }
