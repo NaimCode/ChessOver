@@ -107,10 +107,10 @@ class Board extends ChangeNotifier {
 
   void _setPieces() {
     for (var i = 0; i < 8; i++) {
-      _board[0][i].pieace = Bishop(type: PieceType.black);
+      _board[0][i].pieace = King(type: PieceType.black);
     }
-    _board[2][1].pieace = Bishop(type: PieceType.black);
-    _board[6][6].pieace = Bishop(type: PieceType.black);
+    _board[2][1].pieace = King(type: PieceType.black);
+    _board[4][4].pieace = King(type: PieceType.black);
     // for (int i = 0; i < _x.length; i++) {
     //   _board[1][i].pieace = Pawn(type: PieceType.black);
     //   _board[6][i].pieace = Pawn(type: PieceType.white);

@@ -53,7 +53,19 @@ class Knight extends Piece {
   @override
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
-    // TODO: implement movableSquare
+    board[col][raw].changeActive();
+    //?part1
+    if (col >= 1 && raw >= 2) board[col - 1][raw - 2].changeActive();
+    if (col >= 2 && raw >= 1) board[col - 2][raw - 1].changeActive();
+    //?part 2
+    if (col >= 1 && raw < 6) board[col - 1][raw + 2].changeActive();
+    if (col >= 2 && raw < 7) board[col - 2][raw + 1].changeActive();
+    //?part3
+    if (raw >= 2 && col < 7) board[col + 1][raw - 2].changeActive();
+    if (raw >= 1 && col < 6) board[col + 2][raw - 1].changeActive();
+    //?part 4
+    if (raw < 6 && col < 7) board[col + 1][raw + 2].changeActive();
+    if (raw < 7 && col < 6) board[col + 2][raw + 1].changeActive();
   }
 }
 
@@ -112,11 +124,6 @@ class Bishop extends Piece {
         break;
       }
     }
-    // while (tempRaw >= 0 && tempCol >= 0) {
-    //   board[tempCol + 1][tempRaw + 1].changeActive();
-    //   tempCol--;
-    //   tempRaw--;
-    // }
   }
 }
 
@@ -129,7 +136,40 @@ class Rook extends Piece {
   @override
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
-    // TODO: implement movableSquare
+    board[col][raw].changeActive();
+    //?Part 1
+    for (int i = col; i < board.length - 1; i++) {
+      if (board[i + 1][raw].pieace == null) {
+        board[i + 1][raw].changeActive();
+      } else {
+        break;
+      }
+    }
+    //?Part 2
+    for (int i = col; i > 0; i--) {
+      if (board[i - 1][raw].pieace == null) {
+        board[i - 1][raw].changeActive();
+      } else {
+        break;
+      }
+    }
+
+    //?Part 3
+    for (int i = raw; i < board.length - 1; i++) {
+      if (board[col][i + 1].pieace == null) {
+        board[col][i + 1].changeActive();
+      } else {
+        break;
+      }
+    }
+    //?Part 4
+    for (int i = raw; i > 0; i--) {
+      if (board[col][i - 1].pieace == null) {
+        board[col][i - 1].changeActive();
+      } else {
+        break;
+      }
+    }
   }
 }
 
@@ -156,6 +196,18 @@ class King extends Piece {
   @override
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
-    // TODO: implement movableSquare
+    board[col][raw].changeActive();
+    //?part1
+    if (col >= 1) board[col - 1][raw].changeActive();
+    if (col < 7) board[col + 1][raw].changeActive();
+    //?part2
+    if (raw >= 1) board[col][raw - 1].changeActive();
+    if (raw < 7) board[col][raw + 1].changeActive();
+    //?part3
+    if (raw >= 1 && col >= 1) board[col - 1][raw - 1].changeActive();
+    if (raw < 7 && col < 7) board[col + 1][raw + 1].changeActive();
+    //?part4
+    if (raw >= 1 && col < 7) board[col + 1][raw - 1].changeActive();
+    if (raw < 7 && col >= 1) board[col - 1][raw + 1].changeActive();
   }
 }
