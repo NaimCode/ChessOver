@@ -33,6 +33,7 @@ class Board extends ChangeNotifier {
         eq: (square) {
           if (square.pieace != null) {
             square.changeActive();
+            //movableSquare(id);
           }
         },
         neq: (square) {
@@ -42,18 +43,27 @@ class Board extends ChangeNotifier {
   }
 
   void movableSquare(String id) {
-    changeActive(id);
+    _resetActivity();
     _searchMovableSquare(
         id: id,
         eq: (square, i, y) {
           if (square.pieace != null) {
             square.pieace!.movableSquare(col: i, raw: y, board: board);
+          } else {
+            _resetActivity();
           }
         });
     notifyListeners();
   }
 
   //?Private methods
+  void _resetActivity() {
+    for (int i = 0; i < _board.length; i++) {
+      for (int y = 0; y < _board[i].length; y++) {
+        _board[i][y].active = false;
+      }
+    }
+  }
 
   void _search(
       {required String id,
@@ -96,36 +106,41 @@ class Board extends ChangeNotifier {
   }
 
   void _setPieces() {
-    for (int i = 0; i < _x.length; i++) {
-      _board[1][i].pieace = Pawn(type: PieceType.black);
-      _board[6][i].pieace = Pawn(type: PieceType.white);
+    for (var i = 0; i < 8; i++) {
+      _board[0][i].pieace = Bishop(type: PieceType.black);
     }
+    _board[2][1].pieace = Bishop(type: PieceType.black);
+    _board[6][6].pieace = Bishop(type: PieceType.black);
+    // for (int i = 0; i < _x.length; i++) {
+    //   _board[1][i].pieace = Pawn(type: PieceType.black);
+    //   _board[6][i].pieace = Pawn(type: PieceType.white);
+    // }
 
-    //?Rook
-    _board[0][0].pieace = Rook(type: PieceType.black);
-    _board[7][0].pieace = Rook(type: PieceType.white);
-    _board[0][7].pieace = Rook(type: PieceType.black);
-    _board[7][7].pieace = Rook(type: PieceType.white);
+    // //?Rook
+    // _board[0][0].pieace = Rook(type: PieceType.black);
+    // _board[7][0].pieace = Rook(type: PieceType.white);
+    // _board[0][7].pieace = Rook(type: PieceType.black);
+    // _board[7][7].pieace = Rook(type: PieceType.white);
 
-    //?Knight
-    _board[0][1].pieace = Knight(type: PieceType.black);
-    _board[0][6].pieace = Knight(type: PieceType.black);
-    _board[7][1].pieace = Knight(type: PieceType.white);
-    _board[7][6].pieace = Knight(type: PieceType.white);
+    // //?Knight
+    // _board[0][1].pieace = Knight(type: PieceType.black);
+    // _board[0][6].pieace = Knight(type: PieceType.black);
+    // _board[7][1].pieace = Knight(type: PieceType.white);
+    // _board[7][6].pieace = Knight(type: PieceType.white);
 
-    //?Bishop
-    _board[0][2].pieace = Bishop(type: PieceType.black);
-    _board[0][5].pieace = Bishop(type: PieceType.black);
-    _board[7][2].pieace = Bishop(type: PieceType.white);
-    _board[7][5].pieace = Bishop(type: PieceType.white);
+    // //?Bishop
+    // _board[0][2].pieace = Bishop(type: PieceType.black);
+    // _board[0][5].pieace = Bishop(type: PieceType.black);
+    // _board[7][2].pieace = Bishop(type: PieceType.white);
+    // _board[7][5].pieace = Bishop(type: PieceType.white);
 
-    //?Queen
-    _board[0][3].pieace = Queen(type: PieceType.black);
-    _board[7][3].pieace = Queen(type: PieceType.white);
+    // //?Queen
+    // _board[0][3].pieace = Queen(type: PieceType.black);
+    // _board[7][3].pieace = Queen(type: PieceType.white);
 
-    //?King
-    _board[0][4].pieace = King(type: PieceType.black);
-    _board[7][4].pieace = King(type: PieceType.white);
+    // //?King
+    // _board[0][4].pieace = King(type: PieceType.black);
+    // _board[7][4].pieace = King(type: PieceType.white);
   }
 
   Color _setSquareColor(
@@ -167,7 +182,7 @@ class Square {
   }
 
   //?Getters
-  Color get getColor => active ? activeColor : color;
+  Color get getColor => active && pieace != null ? activeColor : color;
   //?Methods
   void changeActive() {
     active = !active;

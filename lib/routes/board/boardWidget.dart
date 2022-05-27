@@ -44,7 +44,11 @@ class PieceWidget extends StatelessWidget {
                     color: square.getColor,
                     child: Center(
                       child: square.pieace == null
-                          ? null
+                          ? square.active
+                              ? CircleAvatar(
+                                  backgroundColor: square.activeColor,
+                                  radius: 8)
+                              : null
                           : Image.asset(square.pieace!.img),
                     ),
                   ),

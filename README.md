@@ -47,6 +47,9 @@
 ## About The Project
 
 ![Chess Over](images/cover.png "Cover")
+Design
+![Bishop test](images/bishop.png "Bishop")
+Testing Bishop
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
