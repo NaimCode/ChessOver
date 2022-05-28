@@ -9,52 +9,22 @@ abstract class Piece {
   Piece({required this.type});
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board});
-  @override
-  String toString() => 'Piece(img: $img)';
 
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Piece && other.img == img;
-  }
-
-  @override
-  int get hashCode => img.hashCode;
-}
-
-class Pawn extends Piece {
-  Pawn({required super.type}) {
-    img =
-        type.value ? AssetsPieces.pawnWhite1.url : AssetsPieces.pawnBlack1.url;
-  }
-  //?Methods
-  @override
-  void movableSquare(
-      {required int col, required int raw, required List<List<Square>> board}) {
-    board[col][raw].changeActive();
-    if (type.value) {
-      board[col - 1][raw].changeActive();
-      board[col - 2][raw].changeActive();
+  bool _checkMovable(Piece? piece) {
+    if (piece == null) {
+      return true;
     } else {
-      board[col + 1][raw].changeActive();
-      board[col + 2][raw].changeActive();
+      if (piece.type == type) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
-}
 
-class Knight extends Piece {
-  Knight({required super.type}) {
-    img = type.value
-        ? AssetsPieces.knightWhite1.url
-        : AssetsPieces.knightBlack1.url;
-  }
-
-  @override
-  void movableSquare(
+  //? Methods
+  void _knightMovable(
       {required int col, required int raw, required List<List<Square>> board}) {
-    board[col][raw].changeActive();
-    //?part1
     if (col >= 1 && raw >= 2) board[col - 1][raw - 2].changeActive();
     if (col >= 2 && raw >= 1) board[col - 2][raw - 1].changeActive();
     //?part 2
@@ -67,20 +37,78 @@ class Knight extends Piece {
     if (raw < 6 && col < 7) board[col + 1][raw + 2].changeActive();
     if (raw < 7 && col < 6) board[col + 2][raw + 1].changeActive();
   }
-}
 
-class Bishop extends Piece {
-  Bishop({required super.type}) {
-    img = type.value
-        ? AssetsPieces.bishopWhite1.url
-        : AssetsPieces.bishopBlack1.url;
+  void _kingMovable(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    //?part1
+    if (col >= 1) board[col - 1][raw].changeActive();
+    if (col < 7) board[col + 1][raw].changeActive();
+    //?part2
+    if (raw >= 1) board[col][raw - 1].changeActive();
+    if (raw < 7) board[col][raw + 1].changeActive();
+    //?part3
+    if (raw >= 1 && col >= 1) board[col - 1][raw - 1].changeActive();
+    if (raw < 7 && col < 7) board[col + 1][raw + 1].changeActive();
+    //?part4
+    if (raw >= 1 && col < 7) board[col + 1][raw - 1].changeActive();
+    if (raw < 7 && col >= 1) board[col - 1][raw + 1].changeActive();
   }
 
-  @override
-  void movableSquare(
+  void _queenMovable(
       {required int col, required int raw, required List<List<Square>> board}) {
-    board[col][raw].changeActive();
-    //?Part 1
+    _rookMovable(col: col, raw: raw, board: board);
+    _bishopMovableSquare(col: col, raw: raw, board: board);
+  }
+
+  void _rookMovable(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    for (int i = col; i < board.length - 1; i++) {
+      if (_checkMovable(board[i + 1][raw].pieace)) {
+        board[i + 1][raw].changeActive();
+      } else {
+        break;
+      }
+    }
+    //?Part 2
+    for (int i = col; i > 0; i--) {
+      if (_checkMovable(board[i - 1][raw].pieace)) {
+        board[i - 1][raw].changeActive();
+      } else {
+        break;
+      }
+    }
+
+    //?Part 3
+    for (int i = raw; i < board.length - 1; i++) {
+      if (_checkMovable(board[col][i + 1].pieace)) {
+        board[col][i + 1].changeActive();
+      } else {
+        break;
+      }
+    }
+    //?Part 4
+    for (int i = raw; i > 0; i--) {
+      if (_checkMovable(board[col][i - 1].pieace)) {
+        board[col][i - 1].changeActive();
+      } else {
+        break;
+      }
+    }
+  }
+
+  void _pawnMovable(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    if (type.value) {
+      board[col - 1][raw].changeActive();
+      board[col - 2][raw].changeActive();
+    } else {
+      board[col + 1][raw].changeActive();
+      board[col + 2][raw].changeActive();
+    }
+  }
+
+  void _bishopMovableSquare(
+      {required int col, required int raw, required List<List<Square>> board}) {
     int cbottomLeft = col;
     int rbottomLeft = raw;
     while (cbottomLeft < 7 && rbottomLeft > 0) {
@@ -125,6 +153,64 @@ class Bishop extends Piece {
       }
     }
   }
+
+  @override
+  String toString() => 'Piece(img: $img)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Piece && other.img == img;
+  }
+
+  @override
+  int get hashCode => img.hashCode;
+}
+
+class Pawn extends Piece {
+  Pawn({required super.type}) {
+    img =
+        type.value ? AssetsPieces.pawnWhite1.url : AssetsPieces.pawnBlack1.url;
+  }
+  //?Methods
+  @override
+  void movableSquare(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    board[col][raw].changeActive();
+    _pawnMovable(col: col, raw: raw, board: board);
+  }
+}
+
+class Knight extends Piece {
+  Knight({required super.type}) {
+    img = type.value
+        ? AssetsPieces.knightWhite1.url
+        : AssetsPieces.knightBlack1.url;
+  }
+
+  @override
+  void movableSquare(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    board[col][raw].changeActive();
+    //?part1
+    _knightMovable(col: col, raw: raw, board: board);
+  }
+}
+
+class Bishop extends Piece {
+  Bishop({required super.type}) {
+    img = type.value
+        ? AssetsPieces.bishopWhite1.url
+        : AssetsPieces.bishopBlack1.url;
+  }
+
+  @override
+  void movableSquare(
+      {required int col, required int raw, required List<List<Square>> board}) {
+    board[col][raw].changeActive();
+    _bishopMovableSquare(col: col, raw: raw, board: board);
+  }
 }
 
 class Rook extends Piece {
@@ -138,38 +224,7 @@ class Rook extends Piece {
       {required int col, required int raw, required List<List<Square>> board}) {
     board[col][raw].changeActive();
     //?Part 1
-    for (int i = col; i < board.length - 1; i++) {
-      if (board[i + 1][raw].pieace == null) {
-        board[i + 1][raw].changeActive();
-      } else {
-        break;
-      }
-    }
-    //?Part 2
-    for (int i = col; i > 0; i--) {
-      if (board[i - 1][raw].pieace == null) {
-        board[i - 1][raw].changeActive();
-      } else {
-        break;
-      }
-    }
-
-    //?Part 3
-    for (int i = raw; i < board.length - 1; i++) {
-      if (board[col][i + 1].pieace == null) {
-        board[col][i + 1].changeActive();
-      } else {
-        break;
-      }
-    }
-    //?Part 4
-    for (int i = raw; i > 0; i--) {
-      if (board[col][i - 1].pieace == null) {
-        board[col][i - 1].changeActive();
-      } else {
-        break;
-      }
-    }
+    _rookMovable(col: col, raw: raw, board: board);
   }
 }
 
@@ -183,7 +238,7 @@ class Queen extends Piece {
   @override
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
-    // TODO: implement movableSquare
+    _queenMovable(col: col, raw: raw, board: board);
   }
 }
 
@@ -197,17 +252,6 @@ class King extends Piece {
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
     board[col][raw].changeActive();
-    //?part1
-    if (col >= 1) board[col - 1][raw].changeActive();
-    if (col < 7) board[col + 1][raw].changeActive();
-    //?part2
-    if (raw >= 1) board[col][raw - 1].changeActive();
-    if (raw < 7) board[col][raw + 1].changeActive();
-    //?part3
-    if (raw >= 1 && col >= 1) board[col - 1][raw - 1].changeActive();
-    if (raw < 7 && col < 7) board[col + 1][raw + 1].changeActive();
-    //?part4
-    if (raw >= 1 && col < 7) board[col + 1][raw - 1].changeActive();
-    if (raw < 7 && col >= 1) board[col - 1][raw + 1].changeActive();
+    _kingMovable(col: col, raw: raw, board: board);
   }
 }

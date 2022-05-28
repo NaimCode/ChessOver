@@ -107,38 +107,40 @@ class Board extends ChangeNotifier {
 
   void _setPieces() {
     for (var i = 0; i < 8; i++) {
-      _board[0][i].pieace = King(type: PieceType.black);
+      _board[0][i].pieace = Rook(type: PieceType.black);
     }
-    _board[2][1].pieace = King(type: PieceType.black);
-    _board[4][4].pieace = King(type: PieceType.black);
+    _board[2][1].pieace = Rook(type: PieceType.black);
+    _board[4][4].pieace = Rook(type: PieceType.black);
+    _board[5][3].pieace = Rook(type: PieceType.white);
+    _board[6][6].pieace = Rook(type: PieceType.white);
     // for (int i = 0; i < _x.length; i++) {
     //   _board[1][i].pieace = Pawn(type: PieceType.black);
     //   _board[6][i].pieace = Pawn(type: PieceType.white);
     // }
 
-    // //?Rook
+    // // //?Rook
     // _board[0][0].pieace = Rook(type: PieceType.black);
     // _board[7][0].pieace = Rook(type: PieceType.white);
     // _board[0][7].pieace = Rook(type: PieceType.black);
     // _board[7][7].pieace = Rook(type: PieceType.white);
 
-    // //?Knight
+    // // //?Knight
     // _board[0][1].pieace = Knight(type: PieceType.black);
     // _board[0][6].pieace = Knight(type: PieceType.black);
     // _board[7][1].pieace = Knight(type: PieceType.white);
     // _board[7][6].pieace = Knight(type: PieceType.white);
 
-    // //?Bishop
+    // // //?Bishop
     // _board[0][2].pieace = Bishop(type: PieceType.black);
     // _board[0][5].pieace = Bishop(type: PieceType.black);
     // _board[7][2].pieace = Bishop(type: PieceType.white);
     // _board[7][5].pieace = Bishop(type: PieceType.white);
 
-    // //?Queen
+    // // //?Queen
     // _board[0][3].pieace = Queen(type: PieceType.black);
     // _board[7][3].pieace = Queen(type: PieceType.white);
 
-    // //?King
+    // // //?King
     // _board[0][4].pieace = King(type: PieceType.black);
     // _board[7][4].pieace = King(type: PieceType.white);
   }
