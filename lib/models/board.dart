@@ -27,20 +27,6 @@ class Board extends ChangeNotifier {
   }
 
   //?Public methods
-  void changeActive(String id) {
-    _search(
-        id: id,
-        eq: (square) {
-          if (square.pieace != null) {
-            square.changeActive();
-            //movableSquare(id);
-          }
-        },
-        neq: (square) {
-          square.active = false;
-        });
-    notifyListeners();
-  }
 
   void movableSquare(String id) {
     _resetActivity();
@@ -50,9 +36,16 @@ class Board extends ChangeNotifier {
           if (square.pieace != null) {
             square.pieace!.movableSquare(col: i, raw: y, board: board);
           } else {
-            _resetActivity();
+            print(square.active);
+            if (square.activePiece != null) {
+              print("not principal");
+              square.moveTo();
+            } else {
+              _resetActivity();
+            }
           }
         });
+
     notifyListeners();
   }
 
@@ -60,7 +53,7 @@ class Board extends ChangeNotifier {
   void _resetActivity() {
     for (int i = 0; i < _board.length; i++) {
       for (int y = 0; y < _board[i].length; y++) {
-        _board[i][y].active = false;
+        _board[i][y].reset();
       }
     }
   }
@@ -106,13 +99,13 @@ class Board extends ChangeNotifier {
   }
 
   void _setPieces() {
-    for (var i = 0; i < 8; i++) {
-      _board[0][i].pieace = Rook(type: PieceType.black);
-    }
-    _board[2][1].pieace = Rook(type: PieceType.black);
-    _board[4][4].pieace = Rook(type: PieceType.black);
-    _board[5][3].pieace = Rook(type: PieceType.white);
-    _board[6][6].pieace = Rook(type: PieceType.white);
+    // for (var i = 0; i < 8; i++) {
+    //   _board[0][i].pieace = Bishop(type: PieceType.black);
+    // }
+    _board[2][2].pieace = Bishop(type: PieceType.black);
+    _board[4][4].pieace = Bishop(type: PieceType.black);
+    _board[5][3].pieace = Bishop(type: PieceType.white);
+    _board[6][6].pieace = Bishop(type: PieceType.white);
     // for (int i = 0; i < _x.length; i++) {
     //   _board[1][i].pieace = Pawn(type: PieceType.black);
     //   _board[6][i].pieace = Pawn(type: PieceType.white);
@@ -163,22 +156,31 @@ class Square {
   Color color;
   bool active = false;
   Color activeColor;
+  Piece? activePiece;
   Piece? pieace;
   String id;
-
+  List<List<Square>>? _board;
+  int? col;
+  int? raw;
   Square({
     required this.color,
     this.pieace,
+    this.activePiece,
     required this.activeColor,
     required this.id,
   });
 
   Square copyWith(
-      {Color? color, Piece? pieace, String? id, Color? activeColor}) {
+      {Color? color,
+      Piece? pieace,
+      String? id,
+      Color? activeColor,
+      Piece? activePiece}) {
     return Square(
       activeColor: activeColor ?? this.activeColor,
       color: color ?? this.color,
       pieace: pieace ?? this.pieace,
+      activePiece: activePiece ?? this.activePiece,
       id: id ?? this.id,
     );
   }
@@ -186,7 +188,32 @@ class Square {
   //?Getters
   Color get getColor => active && pieace != null ? activeColor : color;
   //?Methods
-  void changeActive() {
+  void changeActive({List<List<Square>>? board, int? col, int? row}) {
+    _board = board;
+    this.col = col;
+    raw = row;
+    activePiece = board?[col!][raw!].pieace;
+
     active = !active;
+  }
+
+  void setActive() {
+    active = true;
+  }
+
+  void moveTo() {
+    print("moveTo");
+    if (activePiece != null && _board != null) {
+      pieace = activePiece;
+      _board![col!][raw!].pieace = null;
+      //s.pieace = null;
+    }
+  }
+
+  void reset() {
+    active = false;
+    // activePiece = null;
+    // col = null;
+    // raw = null;
   }
 }

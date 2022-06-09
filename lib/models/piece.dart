@@ -2,6 +2,8 @@ import 'package:chess_over/data/assets.dart';
 import 'package:chess_over/models/board.dart';
 import 'package:chess_over/models/enum.dart';
 
+enum CheckMovableType { empty, own, ennemy }
+
 abstract class Piece {
   late String img;
   PieceType type;
@@ -10,15 +12,15 @@ abstract class Piece {
   void movableSquare(
       {required int col, required int raw, required List<List<Square>> board});
 
-  bool _checkMovable(Piece? piece) {
-    if (piece == null) {
-      return true;
-    } else {
-      if (piece.type == type) {
-        return false;
-      } else {
-        return true;
+  CheckMovableType _checkMovable(Square square) {
+    if (square.pieace != null) {
+      if (square.pieace!.type != type) {
+        square.changeActive();
       }
+      return CheckMovableType.own;
+    } else {
+      square.changeActive();
+      return CheckMovableType.empty;
     }
   }
 
@@ -63,35 +65,47 @@ abstract class Piece {
   void _rookMovable(
       {required int col, required int raw, required List<List<Square>> board}) {
     for (int i = col; i < board.length - 1; i++) {
-      if (_checkMovable(board[i + 1][raw].pieace)) {
-        board[i + 1][raw].changeActive();
-      } else {
+      if (board[i + 1][raw].pieace != null) {
+        if (board[i + 1][raw].pieace!.type != type) {
+          board[i + 1][raw].changeActive();
+        }
         break;
+      } else {
+        board[i + 1][raw].changeActive();
       }
     }
     //?Part 2
     for (int i = col; i > 0; i--) {
-      if (_checkMovable(board[i - 1][raw].pieace)) {
-        board[i - 1][raw].changeActive();
-      } else {
+      if (board[i - 1][raw].pieace != null) {
+        if (board[i - 1][raw].pieace!.type != type) {
+          board[i - 1][raw].changeActive();
+        }
         break;
+      } else {
+        board[i - 1][raw].changeActive();
       }
     }
 
     //?Part 3
     for (int i = raw; i < board.length - 1; i++) {
-      if (_checkMovable(board[col][i + 1].pieace)) {
-        board[col][i + 1].changeActive();
-      } else {
+      if (board[col][i + 1].pieace != null) {
+        if (board[col][i + 1].pieace!.type != type) {
+          board[col][i + 1].changeActive();
+        }
         break;
+      } else {
+        board[col][i + 1].changeActive();
       }
     }
     //?Part 4
     for (int i = raw; i > 0; i--) {
-      if (_checkMovable(board[col][i - 1].pieace)) {
-        board[col][i - 1].changeActive();
-      } else {
+      if (board[col][i - 1].pieace != null) {
+        if (board[col][i - 1].pieace!.type != type) {
+          board[col][i - 1].changeActive();
+        }
         break;
+      } else {
+        board[col][i - 1].changeActive();
       }
     }
   }
@@ -109,22 +123,38 @@ abstract class Piece {
 
   void _bishopMovableSquare(
       {required int col, required int raw, required List<List<Square>> board}) {
+    //?bottomLeft
     int cbottomLeft = col;
     int rbottomLeft = raw;
+
     while (cbottomLeft < 7 && rbottomLeft > 0) {
       if (board[cbottomLeft + 1][rbottomLeft - 1].pieace == null) {
-        board[cbottomLeft + 1][rbottomLeft - 1].changeActive();
-        cbottomLeft++;
-        rbottomLeft--;
+        board[cbottomLeft + 1][rbottomLeft - 1]
+            .changeActive(board: board, col: col, row: raw);
       } else {
+        if (board[cbottomLeft + 1][rbottomLeft - 1].pieace!.type != type) {
+          board[cbottomLeft + 1][rbottomLeft - 1]
+              .changeActive(board: board, col: col, row: raw);
+        }
         break;
       }
+      cbottomLeft++;
+      rbottomLeft--;
     }
     //?Part 2
     int cbottomRight = col;
     int rbottomRight = raw;
     while (cbottomRight < 7 && rbottomRight < 7) {
-      board[cbottomRight + 1][rbottomRight + 1].changeActive();
+      if (board[cbottomRight + 1][rbottomRight + 1].pieace == null) {
+        board[cbottomRight + 1][rbottomRight + 1]
+            .changeActive(board: board, col: col, row: raw);
+      } else {
+        if (board[cbottomRight + 1][rbottomRight + 1].pieace!.type != type) {
+          board[cbottomRight + 1][rbottomRight + 1]
+              .changeActive(board: board, col: col, row: raw);
+        }
+        break;
+      }
       cbottomRight++;
       rbottomRight++;
     }
@@ -133,24 +163,35 @@ abstract class Piece {
     int rtopLeft = raw;
     while (ctopLeft > 0 && rtopLeft > 0) {
       if (board[ctopLeft - 1][rtopLeft - 1].pieace == null) {
-        board[ctopLeft - 1][rtopLeft - 1].changeActive();
-        ctopLeft--;
-        rtopLeft--;
+        board[ctopLeft - 1][rtopLeft - 1]
+            .changeActive(board: board, col: col, row: raw);
       } else {
+        if (board[ctopLeft - 1][rtopLeft - 1].pieace!.type != type) {
+          board[ctopLeft - 1][rtopLeft - 1]
+              .changeActive(board: board, col: col, row: raw);
+        }
         break;
       }
+      ctopLeft--;
+      rtopLeft--;
     }
+
     //?Part 4
     int ctopRight = col;
     int rtopRight = raw;
     while (ctopRight > 0 && rtopRight < 7) {
       if (board[ctopRight - 1][rtopRight + 1].pieace == null) {
-        board[ctopRight - 1][rtopRight + 1].changeActive();
-        ctopRight--;
-        rtopRight++;
+        board[ctopRight - 1][rtopRight + 1]
+            .changeActive(board: board, col: col, row: raw);
       } else {
+        if (board[ctopRight - 1][rtopRight + 1].pieace!.type != type) {
+          board[ctopRight - 1][rtopRight + 1]
+              .changeActive(board: board, col: col, row: raw);
+        }
         break;
       }
+      ctopRight--;
+      rtopRight++;
     }
   }
 
