@@ -1,6 +1,7 @@
 import 'package:chess_over/data/assets.dart';
 import 'package:chess_over/models/board.dart';
 import 'package:chess_over/models/enum.dart';
+import 'package:chess_over/models/square.dart';
 
 enum CheckMovableType { empty, own, ennemy }
 

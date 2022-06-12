@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:chess_over/models/enum.dart';
+import 'package:chess_over/models/square.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chess_over/models/piece.dart';
@@ -29,17 +30,16 @@ class Board extends ChangeNotifier {
   //?Public methods
 
   void movableSquare(String id) {
-    _resetActivity();
     _searchMovableSquare(
         id: id,
         eq: (square, i, y) {
           if (square.pieace != null) {
+            _resetActivity();
             square.pieace!.movableSquare(col: i, raw: y, board: board);
           } else {
-            print(square.active);
-            if (square.activePiece != null) {
-              print("not principal");
+            if (square.activePiece != null && square.active) {
               square.moveTo();
+              _resetActivity();
             } else {
               _resetActivity();
             }
@@ -150,70 +150,4 @@ class Board extends ChangeNotifier {
 
   //?Widget
 
-}
-
-class Square {
-  Color color;
-  bool active = false;
-  Color activeColor;
-  Piece? activePiece;
-  Piece? pieace;
-  String id;
-  List<List<Square>>? _board;
-  int? col;
-  int? raw;
-  Square({
-    required this.color,
-    this.pieace,
-    this.activePiece,
-    required this.activeColor,
-    required this.id,
-  });
-
-  Square copyWith(
-      {Color? color,
-      Piece? pieace,
-      String? id,
-      Color? activeColor,
-      Piece? activePiece}) {
-    return Square(
-      activeColor: activeColor ?? this.activeColor,
-      color: color ?? this.color,
-      pieace: pieace ?? this.pieace,
-      activePiece: activePiece ?? this.activePiece,
-      id: id ?? this.id,
-    );
-  }
-
-  //?Getters
-  Color get getColor => active && pieace != null ? activeColor : color;
-  //?Methods
-  void changeActive({List<List<Square>>? board, int? col, int? row}) {
-    _board = board;
-    this.col = col;
-    raw = row;
-    activePiece = board?[col!][raw!].pieace;
-
-    active = !active;
-  }
-
-  void setActive() {
-    active = true;
-  }
-
-  void moveTo() {
-    print("moveTo");
-    if (activePiece != null && _board != null) {
-      pieace = activePiece;
-      _board![col!][raw!].pieace = null;
-      //s.pieace = null;
-    }
-  }
-
-  void reset() {
-    active = false;
-    // activePiece = null;
-    // col = null;
-    // raw = null;
-  }
 }

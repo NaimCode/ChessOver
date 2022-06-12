@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/board.dart';
+import '../../models/square.dart';
 
 class BoardWidget extends StatelessWidget {
   const BoardWidget({Key? key}) : super(key: key);
@@ -41,7 +42,7 @@ class PieceWidget extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(3),
                     height: constraints.maxWidth,
-                    color: square.getColor,
+                    color: square.getColor(),
                     child: Center(
                       child: square.pieace == null
                           ? square.active
